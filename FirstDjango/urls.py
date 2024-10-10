@@ -22,5 +22,5 @@ urlpatterns = [
     path('', view=views.index),
     path('about/', view=views.about),
     path('items/', view=views.get_items),
-    path('item/<int:id>/', view=views.get_items),
+    path('item/<int:id>/', view=views.get_item),
 ]

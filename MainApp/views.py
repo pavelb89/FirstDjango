@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound
 
 
 items = [
@@ -39,21 +39,26 @@ def about(request):
     return HttpResponse(text)
 
 
-def get_items(request, id=None):
+def get_item(request, id):
+    href_back = '<p><a href="/items">Назад к списку товаров</a></p>'
+    for item in items:
+        if item['id'] == id:
+            result = f"""
+            <h2> Имя: {item['name']}</h2>
+            <p>Количество: {item['quantity']}</p>
+            {href_back}
+            """
+            return HttpResponse(result)
+    return HttpResponseNotFound(f'<p>Товар c id={id} не найден</p>' + href_back)
 
-    ref = '<p><a href="/items">Назад к списку товаров</a></p>'
 
-    if id is None:
-        lines = '<tr><td>id</td><td>name</td><td>quantity</td><td>описание</td></tr>'
-        for line in items:
-            item_ref = f'<a href="/item/{line['id']}">ссылка</a>'
-            lines += f'<tr><td>{line['id']}</td><td>{line['name']}</td><td>{line['quantity']}</td><td>{item_ref}</td></tr>'
-        return HttpResponse(f'<table border="1">{lines}</table>' + ref)
+def get_items(request):
+
+    result = "<h1>Список товаров</h1><ol>"  
     
-    for line in items:
-        if line['id'] == id:
-            lines = '<tr><td>id</td><td>name</td><td>quantity</td></tr>'
-            lines += f'<tr><td>{line['id']}</td><td>{line['name']}</td><td>{line['quantity']}</td></tr>'
-            return HttpResponse(f'<table border="1">{lines}</table>' + ref)
-    else:
-        return HttpResponse(f'<p>Товар c id={id} не найден</p>' + ref)
+    for item in items:
+        result += f'<li><a href="/item/{item['id']}">{item['name']}</a></li>'
+    result += "</ol>"
+    return HttpResponse(result)
+    
+    
