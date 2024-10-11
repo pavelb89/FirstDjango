@@ -1,16 +1,16 @@
 from django.shortcuts import render
-
+from collections import defaultdict
 # Create your views here.
 
 from django.http import HttpResponse, HttpResponseNotFound
 
 
 items = [
-   {"id": 1, "name": "Кроссовки abibas" ,"quantity":5},
-   {"id": 2, "name": "Куртка кожаная" ,"quantity":2},
-   {"id": 5, "name": "Coca-cola 1 литр" ,"quantity":12},
-   {"id": 7, "name": "Картофель фри" ,"quantity":0},
-   {"id": 8, "name": "Кепка" ,"quantity":124},
+   {"id": 1, "name": "Кроссовки abibas" ,"quantity": 5},
+   {"id": 2, "name": "Куртка кожаная" ,"quantity": 2},
+   {"id": 5, "name": "Coca-cola 1 литр" ,"quantity": 12},
+   {"id": 7, "name": "Картофель фри" ,"quantity": 0},
+   {"id": 8, "name": "Кепка" ,"quantity": 124},
 ]
 
 
@@ -43,27 +43,16 @@ def about(request):
 
 
 def get_item(request, id):
-    href_back = '<p><a href="/items">Назад к списку товаров</a></p>'
     for item in items:
         if item['id'] == id:
-            result = f"""
-            <h2> Имя: {item['name']}</h2>
-            <p>Количество: {item['quantity']}</p>
-            {href_back}
-            """
-            return HttpResponse(result)
+            return render(request, 'item.html', item)
     return HttpResponseNotFound(f'<p>Товар c id={id} не найден</p>' + href_back)
 
 
 def get_items(request):
+    context = {"items": items}
+    return render(request, "items_list.html", context)
 
-    result = "<h1>Список товаров</h1><ol>"  
-    
-    for item in items:
-        result += f'<li><a href="/item/{item['id']}">{item['name']}</a></li>'
-    result += "</ol>"
-    return HttpResponse(result)
-    
 
 def home(request):
     context = {

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Items list</title>
+</head>
+<body>
+
+    <h1> Список товаров </h1>
+
+    <ol>
+        {% for item in items %}
+            <!-- это текст не надо показывать, но он будет выполнен шаблонизатором: {{ item.quantity }}-->
+            {% comment %} это текст тоже не надо показывать, и он НЕ будет выполнен шаблонизатором  {% endcomment %}
+            <li><a href='/item/{{ item.id }}'> {{ item.name }} </a></li> 
+            {# Пример комментария: {{ item.quantity }} #}
+        {% endfor %}
+    </ol>
+</body>
+</html>
