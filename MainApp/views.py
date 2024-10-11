@@ -23,18 +23,21 @@ def index(request):
 
 
 def about(request):
-    name = 'Иван'
-    surname = 'Иванов'
-    patronymic = 'Петрович'
-    phone = '8-923-600-01-02'
-    email = 'vasya@mail.ru'
+    author = {
+        'Имя': 'Иван',
+        'Фамилия': 'Иванов',
+        'Отчество': 'Петрович',
+        'Телефон': '8-923-600-01-02',
+        'email': 'vasya@mail.ru',
+    }
+    
 
     text = f"""
-        <p>Имя: <strong>{name}</strong></p>
-        <p>Отчество: <strong>{patronymic}</strong></p>
-        <p>Фамилия: <strong>{surname}</strong></p>
-        <p>телефон: <strong>{phone}</strong></p>
-        <p>email: <strong>{email}</strong></p>
+        Имя: <i>{author['Имя']}</i><br>
+        Отчество: <i>{author['Фамилия']}</i><br>
+        Фамилия: <i>{author['Отчество']}</i><br>
+        телефон: <i>{author['Телефон']}</i><br>
+        email: <i>{author['email']}</i>
     """
     return HttpResponse(text)
 
@@ -61,4 +64,11 @@ def get_items(request):
     result += "</ol>"
     return HttpResponse(result)
     
+
+def home(request):
+    context = {
+        'name': 'Иванов Иван Иванович',
+        'email': 'ivanov@mail.ru',
+    }
+    return render(request, 'index.html', context=context)
     
