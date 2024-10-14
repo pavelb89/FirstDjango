@@ -4,14 +4,7 @@ from collections import defaultdict
 
 from django.http import HttpResponse, HttpResponseNotFound
 
-
-items = [
-   {"id": 1, "name": "Кроссовки abibas" ,"quantity": 5},
-   {"id": 2, "name": "Куртка кожаная" ,"quantity": 2},
-   {"id": 5, "name": "Coca-cola 1 литр" ,"quantity": 12},
-   {"id": 7, "name": "Картофель фри" ,"quantity": 0},
-   {"id": 8, "name": "Кепка" ,"quantity": 124},
-]
+from MainApp.models import Item
 
 
 def index(request):
@@ -24,32 +17,27 @@ def index(request):
 
 def about(request):
     author = {
-        'Имя': 'Иван',
-        'Фамилия': 'Иванов',
-        'Отчество': 'Петрович',
-        'Телефон': '8-923-600-01-02',
-        'email': 'vasya@mail.ru',
-    }
-    
-
-    text = f"""
-        Имя: <i>{author['Имя']}</i><br>
-        Отчество: <i>{author['Фамилия']}</i><br>
-        Фамилия: <i>{author['Отчество']}</i><br>
-        телефон: <i>{author['Телефон']}</i><br>
-        email: <i>{author['email']}</i>
-    """
-    return HttpResponse(text)
+    "name": "Иван",
+    "middle_name": "Петрович",
+    "last_name": "Иванов",
+    "phone": "8-923-600-01-02",
+    "email": "vasya@mail.ru",
+    }   
+    return render(request, "about.html", {"author": author})
 
 
-def get_item(request, id):
-    for item in items:
-        if item['id'] == id:
-            return render(request, 'item.html', item)
-    return HttpResponseNotFound(f'<p>Товар c id={id} не найден</p>' + href_back)
+def get_item(request, item_id):
+    try:
+        item = Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        return HttpResponseNotFound(f'Товар c id={item_id} не найден')
+    else:
+        context = {"item": item}
+        return render(request, "item_page.html", context)
 
 
 def get_items(request):
+    items = Item.objects.all()
     context = {"items": items}
     return render(request, "items_list.html", context)
 
